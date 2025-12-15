@@ -11,8 +11,8 @@ export default async function AuthPage({ params }: { params: Promise<{ path: str
     const { path } = await params
 
     return (
-        <main className="min-h-screen bg-linear-to-t from-blue-800 to-black mt-15 container flex grow flex-col items-center justify-center self-center p-4 md:p-6">
-            <AuthView path={path} className="bg-blue-800/30 ring ring-blue-600 text-white " />
+        <main className="min-h-screen bg-linear-to-t from-blue-800 to-white mt-15 container flex grow flex-col items-center justify-center self-center p-4 md:p-6">
+            <AuthView path={path} className="bg-blue-400/30 ring ring-blue-600 text-black " />
         </main>
     )
 }

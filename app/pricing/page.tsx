@@ -1,15 +1,13 @@
 import { pricing } from "@/lib/constants"
 
-
-
 function Page() {
 
     const pricingData = pricing;
 
     return (
-        <div className="min-h-screen bg-linear-to-b from-black to-[#3B006E] pt-28 pb-20">
+        <div className="min-h-screen bg-linear-to-b from-white to-blue-400 pt-28 pb-20">
             <div>
-                <p className="text-center uppercase font-medium text-indigo-600">PRICING</p>
+                <p className="text-center uppercase font-bold text-purple-600">PRICING</p>
                 <h3 className="text-3xl font-semibold text-center mx-auto mt-2">Pay as you go</h3>
 
                 <div className="flex flex-wrap items-center justify-center gap-6 mt-16 w-full">
@@ -17,12 +15,12 @@ function Page() {
                         <div
                             key={plan.title}
                             className={`p-6 rounded-2xl max-w-80 w-full shadow-[0px_4px_26px] shadow-black/5 ${plan.mostPopular
-                                ? 'relative pt-12 bg-linear-to-b from-indigo-600 to-violet-600 text-white'
+                                ? 'relative pt-12 bg-linear-to-b from-blue-400 to-blue-600 text-white'
                                 : 'bg-white/50'
                                 }`}
                         >
                             {plan.mostPopular && (
-                                <div className="flex items-center text-xs gap-1 py-1.5 px-2 text-indigo-600 absolute top-4 right-4 rounded bg-white font-medium">
+                                <div className="flex items-center text-xs gap-1 py-1.5 px-2 text-blue-600 absolute top-4 right-4 rounded bg-white font-medium">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="14"
@@ -81,7 +79,7 @@ function Page() {
                                             strokeWidth="2"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
-                                            className={plan.mostPopular ? 'text-white' : 'text-indigo-600'}
+                                            className={plan.mostPopular ? 'text-white' : 'text-blue-600'}
                                         >
                                             <path d="M20 6 9 17l-5-5" />
                                         </svg>
@@ -93,7 +91,7 @@ function Page() {
                             <button
                                 className={`transition w-full py-3 rounded-lg font-medium mt-8 ${plan.mostPopular
                                     ? 'bg-white hover:bg-slate-100 text-slate-800'
-                                    : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white'
                                     }`}
                             >
                                 {plan.buttonText}
