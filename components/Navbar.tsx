@@ -10,7 +10,7 @@ import {
     MobileNavToggle,
     MobileNavMenu,
 } from "@/components/ui/ResizableNavbar";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth/auth-client";
 import { UserButton } from "@daveyplate/better-auth-ui";
 import { useState } from "react";
 import Link from "next/link";
