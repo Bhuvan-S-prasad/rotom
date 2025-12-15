@@ -1,35 +1,77 @@
 "use client"
 
-import { NavBarr } from "@/components/NavBarr";
+import { NavBar } from "@/components/Navbar";
 import Pill from "@/components/Pill";
-import { LightbulbIcon } from "lucide-react";
-import Image from "next/image";
+import { LightbulbIcon, Loader2Icon } from "lucide-react";
+import ColorBends from "@/components/ui/ColorBends";
+import Footer from "@/components/Footer";
+import { useState } from "react";
 
 export default function Home() {
+
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const onSubmitHandler = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    setLoading(true);
+
+  }
+
   return (
-    <div>
-      <div className=" mt-5 flex items-center justify-center">
-        <NavBarr />
+    <div className="relative min-h-screen ">
+      <div className="fixed inset-0 z-0">
+        <ColorBends
+          colors={["#ff5fd2", "#8b5cf6", "#2563eb"]}
+          rotation={0.2}
+          speed={0.3}
+          scale={1}
+          frequency={1}
+          warpStrength={1}
+          mouseInfluence={0}
+          parallax={0.5}
+          noise={0.1}
+        />
       </div>
 
-      <Pill />
+      <div className="relative z-10">
+        <div className="mt-5 flex items-center justify-center">
+          <NavBar />
+        </div>
 
-      <div className="flex flex-col items-center justify-center mt-20">
-        <h1 className="text-5xl font-semibold max-w-3xl text-center bg-linear-to-r from-white to-blue-500 text-transparent bg-clip-text">Vibecode websites with Rotom</h1>
-        <p className="text-gray-200 text-xl max-md:px-2 text-center max-w-sm mt-2">Build stunning websites and portfolios</p>
+        <Pill />
+
+        <div className="flex flex-col items-center justify-center mt-20">
+          <h1 className="text-5xl font-semibold max-w-3xl text-center bg-linear-to-r from-white to-blue-500 text-transparent bg-clip-text">Vibecode websites with Rotom</h1>
+          <p className="text-gray-200 text-xl max-md:px-2 text-center max-w-sm mt-2">Build stunning websites and portfolios</p>
+        </div>
+
+        <div className="flex flex-col items-center justify-center">
+          <form onSubmit={onSubmitHandler} className="bg-neutral-800 max-w-2xl w-full rounded-xl p-4 mt-10 border border-blue-600/70 focus-within:ring-2 ring-blue-500 transition-all">
+            <textarea
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = Math.min(target.scrollHeight, 250) + 'px';
+              }}
+              className="bg-neutral-800 text-gray-200 outline-none resize-none w-full rounded-lg p-2 hide-scrollbar"
+              rows={4}
+              placeholder="Describe your website in details"
+              required
+            />
+            <button className="ml-auto flex items-center gap-2 bg-blue-400 rounded-xl px-4 py-2" onClick={onSubmitHandler}>
+
+              {!loading ? <><LightbulbIcon /> <p>Build</p> </>
+                : <><p>Building...</p> <Loader2Icon className="animate-spin size-5 text-white" /></>}
+            </button>
+          </form>
+        </div>
+
+        <div className="mt-50 border-t border-gray-600 bg-slate-900">
+          <Footer />
+        </div>
       </div>
-
-      <div className="flex flex-col items-center justify-center">
-        <form onSubmit={() => { }} className="bg-white/10 max-w-2xl w-full rounded-xl p-4 mt-10 border border-blue-600/70 focus-within:ring-2 ring-blue-500 transition-all">
-          <textarea onChange={() => { }} className="bg-transparent outline-none text-gray-300 resize-none w-full" rows={4} placeholder="Describe your presentation in details" required />
-          <button className="ml-auto flex items-center gap-2 bg-blue-400 rounded-xl px-4 py-2">
-            <LightbulbIcon />
-            build
-          </button>
-        </form>
-      </div>
-
-
     </div>
   );
 }

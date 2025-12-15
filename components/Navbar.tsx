@@ -1,6 +1,6 @@
 "use client";
 import {
-    Navbar,
+    Navbarr,
     NavBody,
     NavItems,
     MobileNav,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/ResizableNavbar";
 import { useState } from "react";
 
-export function NavBarr() {
+export function NavBar() {
     const navItems = [
         {
             name: "Home",
@@ -36,18 +36,16 @@ export function NavBarr() {
 
     return (
         <div className="relative w-full">
-            <Navbar>
-                {/* Desktop Navigation */}
+            <Navbarr>
                 <NavBody>
                     <NavbarLogo />
                     <NavItems items={navItems} />
                     <div className="flex items-center gap-4">
                         <NavbarButton variant="secondary">Login</NavbarButton>
-                        <NavbarButton variant="primary">Book a call</NavbarButton>
+                        <NavbarButton variant="primary">SignUp</NavbarButton>
                     </div>
                 </NavBody>
 
-                {/* Mobile Navigation */}
                 <MobileNav>
                     <MobileNavHeader>
                         <NavbarLogo />
@@ -89,7 +87,7 @@ export function NavBarr() {
                         </div>
                     </MobileNavMenu>
                 </MobileNav>
-            </Navbar>
+            </Navbarr>
 
         </div>
     );
