@@ -20,7 +20,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-screen ">
+    <div className="relative min-h-screen">
       <div className="fixed inset-0 z-0">
         <ColorBends
           colors={["#ff5fd2", "#8b5cf6", "#2563eb"]}
@@ -35,10 +35,8 @@ export default function Home() {
         />
       </div>
 
-      <div className="relative z-10">
-        <div className="mt-5 flex items-center justify-center">
-          <NavBar />
-        </div>
+      <div className="relative z-10 mt-30">
+
 
         <Pill />
 
@@ -68,9 +66,7 @@ export default function Home() {
           </form>
         </div>
 
-        <div className="mt-50 border-t border-gray-600 bg-slate-900">
-          <Footer />
-        </div>
+
       </div>
     </div>
   );

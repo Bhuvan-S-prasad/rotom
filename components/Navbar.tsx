@@ -35,7 +35,7 @@ export function NavBar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
-        <div className="relative w-full">
+        <div className="absolute top-5 left-0 right-0 z-50 w-full">
             <Navbarr>
                 <NavBody>
                     <NavbarLogo />
