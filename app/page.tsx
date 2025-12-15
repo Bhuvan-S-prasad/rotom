@@ -6,6 +6,7 @@ import { LightbulbIcon, Loader2Icon } from "lucide-react";
 import ColorBends from "@/components/ui/ColorBends";
 import Footer from "@/components/Footer";
 import { useState } from "react";
+import { Toaster } from "sonner";
 
 export default function Home() {
 
@@ -21,6 +22,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen">
+      <Toaster />
       <div className="fixed inset-0 z-0">
         <ColorBends
           colors={["#ff5fd2", "#8b5cf6", "#2563eb"]}

@@ -73,7 +73,8 @@ export function NavBar() {
                             <NavbarButton
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 variant="primary"
-                                className="w-full"
+                                className="w-full text-white"
+                                href="/auth/sign-in"
                             >
                                 Login
                             </NavbarButton>
@@ -81,6 +82,7 @@ export function NavBar() {
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 variant="primary"
                                 className="w-full"
+                                href="/auth/sign-up"
                             >
                                 SignUp
                             </NavbarButton>

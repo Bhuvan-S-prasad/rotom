@@ -4,6 +4,8 @@ import "./globals.css";
 import ColorBends from "@/components/ui/ColorBends";
 import { NavBar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Providers } from "./provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -27,13 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
-        <NavBar />
-        <main>
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <NavBar />
+          <main>
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
