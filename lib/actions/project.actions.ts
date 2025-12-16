@@ -418,11 +418,64 @@ export async function makeRevision(projectId: string, message: string) {
             current_version_index: version.id
         }
     })
+}
+
+// version rollbacks
+export async function rollbackToVersion(projectId: string, versionId: string) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session?.user) throw new Error("UNAUTHORIZED");
+
+    const userId = session.user.id;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) throw new Error("USER_NOT_FOUND");
 
 
 
+    const project = await prisma.websiteProject.findUnique({
+        where: { id: projectId, userId },
+        include: { versions: true }
+    });
 
+    if (!project) throw new Error("PROJECT_NOT_FOUND");
 
+    const version = project.versions.find((v: { id: string }) => v.id === versionId);
 
+    if (!version) throw new Error("VERSION_NOT_FOUND");
+
+    await prisma.websiteProject.update({
+        where: { id: projectId },
+        data: {
+            current_code: version.code,
+            current_version_index: version.id
+        }
+    })
+
+    await prisma.conversation.create({
+        data: {
+            role: 'assistant',
+            content: 'rolled back to previous version',
+            projectId
+        }
+    })
 
 }
+
+export async function deleteProject(projectId: string) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session?.user) throw new Error("UNAUTHORIZED");
+
+    const userId = session.user.id;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) throw new Error("USER_NOT_FOUND");
+
+    await prisma.websiteProject.delete({ where: { id: projectId, userId } });
+}
+
