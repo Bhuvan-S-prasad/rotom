@@ -10,7 +10,10 @@ import {
     MobileNavToggle,
     MobileNavMenu,
 } from "@/components/ui/ResizableNavbar";
+import { useSession } from "@/lib/auth/auth-client";
+import { UserButton } from "@daveyplate/better-auth-ui";
 import { useState } from "react";
+import Link from "next/link";
 
 export function NavBar() {
     const navItems = [
@@ -34,46 +37,56 @@ export function NavBar() {
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    const { data: session } = useSession();
+
     return (
-        <div className="absolute top-5 left-0 right-0 z-50 w-full">
-            <Navbarr>
-                <NavBody>
+        <Navbarr>
+            <NavBody>
+                <NavbarLogo />
+                <NavItems items={navItems} />
+                <div className="flex items-center gap-4">
+                    {!session?.user ? (
+                        <>
+                            <NavbarButton variant="secondary" href="/auth/sign-in" as={Link}>Login</NavbarButton>
+                            <NavbarButton variant="primary" href="/auth/sign-up" as={Link}>SignUp</NavbarButton>
+                        </>
+                    ) : (
+                        <UserButton size="icon" />
+                    )}
+                </div>
+            </NavBody>
+
+            <MobileNav>
+                <MobileNavHeader>
                     <NavbarLogo />
-                    <NavItems items={navItems} />
-                    <div className="flex items-center gap-4">
-                        <NavbarButton variant="secondary">Login</NavbarButton>
-                        <NavbarButton variant="primary">SignUp</NavbarButton>
-                    </div>
-                </NavBody>
-
-                <MobileNav>
-                    <MobileNavHeader>
-                        <NavbarLogo />
-                        <MobileNavToggle
-                            isOpen={isMobileMenuOpen}
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        />
-                    </MobileNavHeader>
-
-                    <MobileNavMenu
+                    <MobileNavToggle
                         isOpen={isMobileMenuOpen}
-                        onClose={() => setIsMobileMenuOpen(false)}
-                    >
-                        {navItems.map((item, idx) => (
-                            <a
-                                key={`mobile-link-${idx}`}
-                                href={item.link}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="relative text-neutral-600 dark:text-neutral-300"
-                            >
-                                <span className="block">{item.name}</span>
-                            </a>
-                        ))}
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    />
+                </MobileNavHeader>
+
+                <MobileNavMenu
+                    isOpen={isMobileMenuOpen}
+                    onClose={() => setIsMobileMenuOpen(false)}
+                >
+                    {navItems.map((item, idx) => (
+                        <a
+                            key={`mobile-link-${idx}`}
+                            href={item.link}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="relative text-neutral-600 dark:text-neutral-300"
+                        >
+                            <span className="block">{item.name}</span>
+                        </a>
+                    ))}
+                    {!session?.user ? (
                         <div className="flex w-full flex-col gap-4">
                             <NavbarButton
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 variant="primary"
-                                className="w-full"
+                                className="w-full text-white"
+                                href="/auth/sign-in"
+                                as={Link}
                             >
                                 Login
                             </NavbarButton>
@@ -81,15 +94,18 @@ export function NavBar() {
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 variant="primary"
                                 className="w-full"
+                                href="/auth/sign-up"
+                                as={Link}
                             >
                                 SignUp
                             </NavbarButton>
                         </div>
-                    </MobileNavMenu>
-                </MobileNav>
-            </Navbarr>
-
-        </div>
+                    ) : (
+                        <UserButton size="icon" />
+                    )}
+                </MobileNavMenu>
+            </MobileNav>
+        </Navbarr>
     );
 }
 
