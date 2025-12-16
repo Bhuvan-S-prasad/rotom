@@ -23,22 +23,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen">
       <Toaster />
-      {/* <div className="fixed inset-0 z-0">
-        <ColorBends
-          colors={["#ff5fd2", "#8b5cf6", "#2563eb"]}
-          rotation={0.2}
-          speed={0.3}
-          scale={1}
-          frequency={1}
-          warpStrength={1}
-          mouseInfluence={0}
-          parallax={0.5}
-          noise={0.1}
-        />
-      </div> */}
-
       <div className="relative z-10 mt-30">
-
 
         <Pill />
 
