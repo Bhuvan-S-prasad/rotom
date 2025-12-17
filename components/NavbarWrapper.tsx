@@ -10,8 +10,8 @@ export function NavbarWrapper() {
     // This allows /projects (list) to show navbar, but /projects/[id] to hide it
     // Assuming the structure is exactly /projects/[id]
     const isProjectDetailPage = pathname.startsWith("/projects/") && pathname.split("/").length > 2
-
-    if (isProjectDetailPage) {
+    const isPreviewPage = pathname.startsWith("/preview/") && pathname.split("/").length > 2
+    if (isProjectDetailPage || isPreviewPage) {
         return null
     }
 

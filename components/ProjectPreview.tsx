@@ -1,5 +1,6 @@
 import { iframeScript, Project } from "@/lib/constants";
-import { forwardRef, useRef } from "react"
+import { forwardRef, useEffect, useRef, useState } from "react"
+import EditorPanel from "./EditorPannel";
 
 export interface ProjectPreviewRef {
     getCode: () => string | undefined;
@@ -16,11 +17,35 @@ const ProjectPreview = forwardRef<ProjectPreviewRef, ProjectPreviewProps>(({ pro
 
     const iframeRef = useRef<HTMLIFrameElement>(null)
 
+    const [selectedElement, setSelectedElement] = useState<any>(null);
+
     const resolutions = {
         phone: 'w-[412px] py-10',
         tablet: 'w-[768px]',
         desktop: 'w-full'
     }
+
+    const handleUpdate = (updates: any) => {
+        if (!iframeRef.current?.contentWindow) return;
+        iframeRef.current.contentWindow.postMessage({ type: 'UPDATE_ELEMENT', payload: updates }, '*')
+    }
+
+    useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data.type === 'ELEMENT_SELECTED') {
+                setSelectedElement(event.data.payload);
+            }
+            else if (event.data.type === 'CLEAR_SELECTION') {
+                setSelectedElement(null);
+            }
+        }
+
+        window.addEventListener('message', handleMessage)
+
+        return () => {
+            window.removeEventListener('message', handleMessage)
+        }
+    }, [])
 
     const injectPreview = (html: string) => {
         if (!html) return '';
@@ -41,9 +66,18 @@ const ProjectPreview = forwardRef<ProjectPreviewRef, ProjectPreviewProps>(({ pro
                     <iframe
                         ref={iframeRef}
                         srcDoc={injectPreview(project.current_code)}
-                        className={`h-full roundedmax-sm:w-full ${resolutions[device]} transition-all justify-center`}
+                        className={`h-full rounded max-sm:w-full ${resolutions[device]} transition-all justify-center`}
 
                     />
+                    {showEditorPanel && selectedElement && (
+                        <EditorPanel selectedElement={selectedElement}
+                            onUpdate={handleUpdate}
+                            onClose={() => {
+                                setSelectedElement(null);
+                                if (iframeRef.current?.contentWindow) {
+                                    iframeRef.current.contentWindow.postMessage({ type: 'CLEAR_SELECTION_REQUEST' }, '*')
+                                }
+                            }} />)}
 
                 </>
             ) : isGenerating && (
