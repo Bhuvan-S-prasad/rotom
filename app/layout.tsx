@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ColorBends from "@/components/ui/ColorBends";
-import { NavBar } from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { NavbarWrapper } from "@/components/NavbarWrapper";
+import FooterWrapper from "@/components/FooterWrapper";
 import { Providers } from "./provider";
 
 const geistSans = Geist({
@@ -32,11 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiase bg-[url('https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/gradient-bg-with-grid.png')] bg-cover bg-center bg-no-repeat`}
       >
         <Providers>
-          <NavBar />
+          <NavbarWrapper />
           <main>
             {children}
           </main>
-          <Footer />
+          <FooterWrapper />
         </Providers>
       </body>
     </html>

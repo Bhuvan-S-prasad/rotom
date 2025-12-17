@@ -1,22 +1,56 @@
 "use client"
 
-import { NavBar } from "@/components/Navbar";
 import Pill from "@/components/Pill";
 import { LightbulbIcon, Loader2Icon } from "lucide-react";
-import ColorBends from "@/components/ui/ColorBends";
-import Footer from "@/components/Footer";
 import { useState } from "react";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
+import { authClient } from "@/lib/auth/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
+  const route = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  const { data: session } = authClient.useSession();
+
 
   const onSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault()
+    try {
+      if (!session?.user) {
+        return toast.error('please sign in to create a project')
+      }
+      else if (!input.trim()) {
+        return toast.error('Please enter a message')
+      }
+      setLoading(true)
+      const res = await fetch('/api/project', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: input })
+      });
 
-    setLoading(true);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create project');
+      }
+
+      setLoading(false)
+      console.log("done")
+      route.push(`/projects/${data.projectId}`)
+
+    }
+    catch (error: any) {
+      setLoading(false)
+      toast.error(error.message || 'Something went wrong')
+    }
+
+
 
   }
 
@@ -35,6 +69,8 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center">
           <form onSubmit={onSubmitHandler} className="bg-white max-w-2xl w-full rounded-xl p-4 mt-10 border border-blue-800 focus-within:ring-2 ring-blue-500 transition-all">
             <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
                 target.style.height = 'auto';
@@ -45,7 +81,7 @@ export default function Home() {
               placeholder="Describe your website in details"
               required
             />
-            <button className="ml-auto flex items-center gap-2 bg-blue-400 rounded-xl px-4 py-2 border-black" onClick={onSubmitHandler}>
+            <button type="submit" className="ml-auto flex items-center gap-2 bg-blue-400 rounded-xl px-4 py-2 border-black">
 
               {!loading ? <><LightbulbIcon /> <p>Build</p> </>
                 : <><p>Building...</p> <Loader2Icon className="animate-spin size-5 text-white" /></>}

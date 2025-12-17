@@ -9,6 +9,7 @@ export async function createUserProject(
     const session = await auth.api.getSession({
         headers: await headers()
     });
+    console.log("[Project DEBUG] Session retrieved")
 
     if (!session?.user) throw new Error("UNAUTHORIZED");
 
@@ -49,6 +50,7 @@ export async function createUserProject(
         data: { credits: { decrement: 5 } }
     })
 
+    console.log("[Project DEBUG] Starting Prompt Enhancement...")
     const promptEnhancer = await openai.chat.completions.create({
         model: 'z-ai/glm-4.5-air:free',
         messages: [
@@ -93,6 +95,9 @@ export async function createUserProject(
 
     // Generate website code
 
+    console.log("[Project DEBUG] Enhanced Prompt: ", enhancedPrompt);
+    console.log("[Project DEBUG] Starting Code Generation (this may take a while)...");
+
     const codeGenerationResponse = await openai.chat.completions.create({
         model: 'z-ai/glm-4.5-air:free',
         messages: [
@@ -129,6 +134,7 @@ export async function createUserProject(
     })
 
     const code = codeGenerationResponse.choices[0].message.content || '';
+    console.log("[Project DEBUG] Code Generated. Length: ", code.length);
 
     //create version for the project
 
@@ -159,6 +165,7 @@ export async function createUserProject(
             current_version_index: version.id
         }
     })
+    console.log("[Project DEBUG] Project creation complete: ", project.id);
     return { projectId: project.id };
 }
 
@@ -515,7 +522,7 @@ export async function saveProjectCode(projectId: string, code: string) {
 
     if (!user) throw new Error("USER_NOT_FOUND");
 
-    if(!code) throw new Error("CODE_NOT_FOUND");
+    if (!code) throw new Error("CODE_NOT_FOUND");
 
     const project = await prisma.websiteProject.findFirst({
         where: { id: projectId, userId },

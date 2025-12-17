@@ -12,10 +12,12 @@ import {
 } from "@/components/ui/ResizableNavbar";
 import { useSession } from "@/lib/auth/auth-client";
 import { UserButton } from "@daveyplate/better-auth-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export function NavBar() {
+ 
+
     const navItems = [
         {
             name: "Home",
