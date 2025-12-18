@@ -44,7 +44,7 @@ function EditorPanel({ selectedElement, onUpdate, onClose }: EditorPanelProps) {
     if (!selectedElement || !values) return null;
 
     return (
-        <div className="absolute top-4 right-4 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-in fade-in slide-in-from-right-5 overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="absolute top-4 right-4 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-fade-in fade-in slide-in-from-right-5 overflow-hidden flex flex-col max-h-[90vh]">
             {/* Header */}
             <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-gray-50/50">
                 <div className="flex items-center gap-2">

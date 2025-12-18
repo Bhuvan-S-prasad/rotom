@@ -36,6 +36,22 @@ function Page() {
         }
     }
 
+    const downloadCode = () => {
+        const code = previewRef.current?.getCode() || project?.current_code
+        if (!code) {
+            if (isGenerating) {
+                return
+            }
+            return
+        }
+
+        const element = document.createElement('a')
+        const file = new Blob([code], {type: "text/html"})
+        element.href = URL.createObjectURL(file)
+        element.download = `index.html`
+        element.click()
+    }
+
     useEffect(() => {
         fetchProject()
     }, [projectId.id])
@@ -49,7 +65,7 @@ function Page() {
 
     return (
         <div className="flex flex-col h-screen w-full bg-white text-black">
-            <header className="flex max-sm:flex-col sm:items-center justify-between gap-4 px-6 py-4 border-b border-gray-100">
+            <header className="flex max-sm:flex-col sm:items-center justify-between gap-4 px-6 py-4 border-b">
 
                 <div className="flex items-center gap-4 sm:min-w-96 text-nowrap">
                     <div className="p-2 bg-gray-100 rounded-lg">
@@ -102,7 +118,7 @@ function Page() {
                     >
                         <ViewIcon size={16} />  Preview
                     </Link>
-                    <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg font-medium text-gray-600 transition-colors">
+                    <button onClick={downloadCode} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg font-medium text-gray-600 transition-colors">
                         <Download size={16} />
                         <span>Download</span>
                     </button>
