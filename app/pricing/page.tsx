@@ -5,7 +5,7 @@ function Page() {
     const pricingData = pricing;
 
     return (
-        <div className="min-h-screen bg-linear-to-b from-white to-blue-400 pt-28 pb-20">
+        <div className="min-h-screen pt-28 pb-20">
             <div>
                 <p className="text-center uppercase font-bold text-purple-600">PRICING</p>
                 <h3 className="text-3xl font-semibold text-center mx-auto mt-2">Pay as you go</h3>
@@ -14,8 +14,8 @@ function Page() {
                     {pricingData.map((plan) => (
                         <div
                             key={plan.title}
-                            className={`p-6 rounded-2xl max-w-80 w-full shadow-[0px_4px_26px] shadow-black/5 ${plan.mostPopular
-                                ? 'relative pt-12 bg-linear-to-b from-blue-400 to-blue-600 text-white'
+                            className={`p-6 rounded-2xl max-w-80 w-full border-2 shadow-[0px_4px_26px] shadow-black/5 ${plan.mostPopular
+                                ? 'relative pt-12 bg-blue-400 text-white'
                                 : 'bg-white/50'
                                 }`}
                         >
