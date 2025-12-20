@@ -11,13 +11,17 @@ interface Project {
     initial_prompt: string;
     current_code: string | null;
     createdAt: Date;
+    user?: {
+        name: string | null;
+    };
 }
 
 interface ProjectCardProps {
     project: Project;
+    isPublic?: boolean;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, isPublic = false }: ProjectCardProps) {
     const router = useRouter();
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -78,14 +82,21 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     <h3 className="font-semibold text-lg text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
                         {project.name}
                     </h3>
-                    <button
-                        onClick={handleDelete}
-                        disabled={isDeleting}
-                        className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all active:scale-95 disabled:opacity-50"
-                        title="Delete project"
-                    >
-                        <Trash2Icon size={18} />
-                    </button>
+                    {isPublic && project.user && (
+                        <p className="text-xs text-gray-400 mb-2">
+                            by {project.user.name || "Anonymous"}
+                        </p>
+                    )}
+                    {!isPublic && (
+                        <button
+                            onClick={handleDelete}
+                            disabled={isDeleting}
+                            className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all active:scale-95 disabled:opacity-50"
+                            title="Delete project"
+                        >
+                            <Trash2Icon size={18} />
+                        </button>
+                    )}
                 </div>
 
                 <p className="text-gray-500 text-sm line-clamp-2 mb-6 flex-1">
@@ -93,20 +104,33 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 </p>
 
                 <div className="flex gap-3">
-                    <Link
-                        href={`/projects/${project.id}`}
-                        className="flex-1 text-center py-2.5 px-4 bg-gray-900 text-white rounded-lg hover:bg-gray-800 active:scale-[0.98] transition-all font-medium text-sm shadow-sm hover:shadow-md"
-                    >
-                        Open Project
-                    </Link>
-                    <Link
-                        href={`/preview/${project.id || ''}`}
-                        target="_blank"
-                        className="flex items-center justify-center py-2.5 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 active:scale-[0.98] transition-all font-medium text-sm shadow-sm hover:shadow-md"
-                        title="Preview"
-                    >
-                        <EyeIcon size={18} />
-                    </Link>
+                    {!isPublic ? (
+                        <Link
+                            href={`/projects/${project.id}`}
+                            className="flex-1 text-center py-2.5 px-4 bg-gray-900 text-white rounded-lg hover:bg-gray-800 active:scale-[0.98] transition-all font-medium text-sm shadow-sm hover:shadow-md"
+                        >
+                            Open Project
+                        </Link>
+                    ) : (
+                        <Link
+                            href={`/preview/${project.id || ''}`}
+                            target="_blank"
+                            className="flex-1 text-center py-2.5 px-4 bg-gray-900 text-white rounded-lg hover:bg-gray-800 active:scale-[0.98] transition-all font-medium text-sm shadow-sm hover:shadow-md"
+                        >
+                            View Project
+                        </Link>
+                    )}
+
+                    {!isPublic && (
+                        <Link
+                            href={`/preview/${project.id || ''}`}
+                            target="_blank"
+                            className="flex items-center justify-center py-2.5 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 active:scale-[0.98] transition-all font-medium text-sm shadow-sm hover:shadow-md"
+                            title="Preview"
+                        >
+                            <EyeIcon size={18} />
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

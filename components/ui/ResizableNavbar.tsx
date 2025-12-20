@@ -8,6 +8,7 @@ import {
     useScroll,
     useMotionValueEvent,
 } from "motion/react";
+import Image from "next/image";
 
 import React, { useRef, useState } from "react";
 
@@ -239,7 +240,12 @@ export const NavbarLogo = () => {
             href="#"
             className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-white"
         >
-            <CpuIcon />
+            <Image
+                src="/favicon.png"
+                alt="Logo"
+                width={32}
+                height={32}
+            />
             <span className="font-medium text-white dark:text-white">Rotom</span>
         </a>
     );

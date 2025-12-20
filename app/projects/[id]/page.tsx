@@ -2,14 +2,19 @@
 
 import ProjectPreview, { ProjectPreviewRef } from "@/components/ProjectPreview"
 import Sidebar from "@/components/Sidebar"
+import { togglePublish } from "@/lib/actions/project.actions"
 import { Project } from "@/lib/constants"
+import { router } from "better-auth/api"
 import { CpuIcon, Download, EyeIcon, EyeOffIcon, LaptopIcon, MessageSquareIcon, SaveIcon, SmartphoneIcon, TabletIcon, ViewIcon, XIcon } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 
 function Page() {
 
+    const router = useRouter()
     const projectId = useParams()
 
     const [project, setProject] = useState<Project | null>(null)
@@ -18,7 +23,24 @@ function Page() {
     const [isGenerating, setIsGenerating] = useState(true)
     const [device, setDevice] = useState<'phone' | 'tablet' | 'desktop'>("desktop")
 
+    const [isPublishing, setIsPublishing] = useState(false)
     const previewRef = useRef<ProjectPreviewRef>(null)
+
+    const handlePublish = async () => {
+        if (!project) return
+        try {
+            setIsPublishing(true)
+            await togglePublish(project.id)
+            setProject(prev => prev ? { ...prev, isPublished: !prev.isPublished } : null)
+            toast.success(project.isPublished ? "Project unpublished" : "Project published successfully")
+            router.refresh()
+        } catch (error) {
+            console.error("Error publishing project:", error)
+            toast.error("Failed to update publish status")
+        } finally {
+            setIsPublishing(false)
+        }
+    }
 
     const fetchProject = async () => {
         try {
@@ -46,7 +68,7 @@ function Page() {
         }
 
         const element = document.createElement('a')
-        const file = new Blob([code], {type: "text/html"})
+        const file = new Blob([code], { type: "text/html" })
         element.href = URL.createObjectURL(file)
         element.download = `index.html`
         element.click()
@@ -69,7 +91,14 @@ function Page() {
 
                 <div className="flex items-center gap-4 sm:min-w-96 text-nowrap">
                     <div className="p-2 bg-gray-100 rounded-lg">
-                        <CpuIcon className="size-6 text-gray-700" />
+                        <Image
+                            src="/favicon.png"
+                            width={24}
+                            height={24}
+                            alt="Project Icon"
+                            onClick={() => router.push("/")}
+                            className="hover:cursor-pointer"
+                        />
                     </div>
                     <div className="max-w-60 sm:max-w-xs">
                         <h2 className="text-sm font-semibold truncate text-gray-900">{project.name}</h2>
@@ -122,12 +151,23 @@ function Page() {
                         <Download size={16} />
                         <span>Download</span>
                     </button>
-                    <button className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm ${project.isPublished
-                        ? "bg-amber-100 text-amber-700 hover:bg-amber-200 border border-amber-200"
-                        : "bg-black text-white hover:bg-gray-800"
-                        }`}>
-                        {project.isPublished ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                        <span>{project.isPublished ? "Unpublish" : "Publish"}</span>
+                    <button
+                        onClick={handlePublish}
+                        disabled={isPublishing}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm disabled:opacity-50 ${project.isPublished
+                            ? "bg-amber-100 text-amber-700 hover:bg-amber-200 border border-amber-200"
+                            : "bg-black text-white hover:bg-gray-800"
+                            }`}>
+                        {isPublishing ? (
+                            <div className="size-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+                        ) : project.isPublished ? (
+                            <EyeOffIcon size={16} />
+                        ) : (
+                            <EyeIcon size={16} />
+                        )}
+                        <span>
+                            {isPublishing ? "Updating..." : (project.isPublished ? "Unpublish" : "Publish")}
+                        </span>
                     </button>
                 </div>
             </header>

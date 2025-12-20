@@ -1,3 +1,5 @@
+"use server"
+
 import { headers } from "next/headers";
 import { auth } from "../auth/auth";
 import prisma from "../prisma";
@@ -104,30 +106,66 @@ export async function createUserProject(
             {
                 role: "system",
                 content: `
-                    You are an expert web developer. Create a complete, production-ready, single-page website based on this request: "${enhancedPrompt}"
+                You are an expert senior frontend engineer and UI designer.
+                Create a complete, production-ready, single-page website based on the following request:
+                "${enhancedPrompt}"
 
-    CRITICAL REQUIREMENTS:
-    - You MUST output valid HTML ONLY. 
-    - Use Tailwind CSS for ALL styling
-    - Include this EXACT script in the <head>: <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    - Use Tailwind utility classes extensively for styling, animations, and responsiveness
-    - Make it fully functional and interactive with JavaScript in <script> tag before closing </body>
-    - Use modern, beautiful design with great UX using Tailwind classes
-    - Make it responsive using Tailwind responsive classes (sm:, md:, lg:, xl:)
-    - Use Tailwind animations and transitions (animate-*, transition-*)
-    - Include all necessary meta tags
-    - Use Google Fonts CDN if needed for custom fonts
-    - Use placeholder images from https://placehold.co/600x400
-    - Use Tailwind gradient classes for beautiful backgrounds
-    - Make sure all buttons, cards, and components use Tailwind styling
+CORE REQUIREMENTS (NON-NEGOTIABLE)
+- Output VALID HTML ONLY
+- The HTML must be fully self-contained and render correctly when opened directly in a browser
+- Use Tailwind CSS for ALL styling
+- Include this EXACT script inside <head>:
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+- Do NOT use any external CSS files
+- Do NOT use any UI frameworks other than Tailwind
+- All interactivity must be implemented using vanilla JavaScript
+- Place JavaScript inside a <script> tag before closing </body>
 
-    CRITICAL HARD RULES:
-    1. You MUST put ALL output ONLY into message.content.
-    2. You MUST NOT place anything in "reasoning", "analysis", "reasoning_details", or any hidden fields.
-    3. You MUST NOT include internal thoughts, explanations, analysis, comments, or markdown.
-    4. Do NOT include markdown, explanations, notes, or code fences.
+DESIGN & UX STANDARDS
+- Use modern SaaS-grade UI design
+- Clean layout, strong visual hierarchy, generous whitespace
+- Thoughtful typography (use Google Fonts via CDN if needed)
+- Smooth hover states, transitions, and micro-interactions
+- Elegant animations using Tailwind utilities (transition, duration, ease, animate-*)
+- Responsive across all screen sizes using Tailwind breakpoints:
+sm: md: lg: xl:
 
-    The HTML should be complete and ready to render as-is with Tailwind CSS.`
+IMAGES & MEDIA (IMPORTANT)
+- Use high-quality, realistic placeholder images
+- Prefer:
+https://picsum.photos
+https://images.unsplash.com (static demo URLs only)
+- Images should feel context-aware (hero images, cards, avatars, dashboards, etc.)
+- Vary aspect ratios appropriately:
+- Hero sections → wide (16:9)
+- Cards → balanced (4:3 or square)
+- Avatars → circular or square
+- Avoid generic 600x400 placeholders unless absolutely necessary
+
+LAYOUT & COMPONENTS
+- Use semantic HTML (header, main, section, footer)
+- Include polished components where relevant:
+- Hero section
+- Navigation bar
+- Feature cards or sections
+- CTA buttons
+- Forms (if applicable)
+- Footer
+- All components must be styled entirely with Tailwind utility classes
+
+ACCESSIBILITY & QUALITY
+- Proper meta tags (charset, viewport, description)
+- Buttons and inputs must have visible focus states
+- Use readable contrast and accessible font sizes
+- Avoid unnecessary clutter — clarity over decoration
+
+HARD RULES (STRICT)
+- Output ONLY raw HTML
+- NO explanations, comments, markdown, or code fences
+- NO analysis or reasoning text
+- NO placeholders like “TODO” or “add later”
+- The result must be ready to deploy    
+                `
             },
             { role: "user", content: enhancedPrompt || `` },
         ],
@@ -538,4 +576,31 @@ export async function saveProjectCode(projectId: string, code: string) {
             current_version_index: project.current_version_index
         }
     })
+}
+
+export async function getPublishedProjects(page: number = 1, limit: number = 6) {
+    const skip = (page - 1) * limit;
+
+    const [projects, total] = await Promise.all([
+        prisma.websiteProject.findMany({
+            where: { isPublished: true },
+            orderBy: { createdAt: 'desc' },
+            skip,
+            take: limit,
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                    }
+                }
+            }
+        }),
+        prisma.websiteProject.count({ where: { isPublished: true } })
+    ]);
+
+    return {
+        projects,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page
+    };
 }
