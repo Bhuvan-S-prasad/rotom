@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useGlobalError } from "@/lib/context/global-error-context";
 
 interface Props {
     isMenuOpen: boolean;
@@ -17,6 +18,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
     const messageRef = useRef<HTMLDivElement>(null);
     const [input, setInput] = useState("");
     const router = useRouter();
+    const { setError } = useGlobalError();
 
     const handleRollBack = async (versionId: string) => {
         try {
@@ -78,8 +80,10 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
 
             if (!response.ok) {
                 if (response.status === 403) {
-                    toast.error("Insufficient Credits", {
-                        description: "You need 10 credits to make a revision.",
+                    toast.error("Insufficient Credits");
+                    setError({
+                        message: "Insufficient Credits",
+                        description: "You need 10 credits to make a revision. Please purchase more to continue.",
                         action: {
                             label: "Buy Credits",
                             onClick: () => router.push("/pricing"),

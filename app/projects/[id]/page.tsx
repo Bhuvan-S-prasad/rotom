@@ -11,12 +11,14 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
+import { useGlobalError } from "@/lib/context/global-error-context"
 
 
 function Page() {
 
     const router = useRouter()
     const projectId = useParams()
+    const { setError } = useGlobalError()
 
     const [project, setProject] = useState<Project | null>(null)
     const [isMenuOpen, setIsMenuOpen] = useState(true)
@@ -39,8 +41,10 @@ function Page() {
         } catch (error: any) {
             console.error("Error publishing project:", error)
             if (error.message === "INSUFFICIENT_CREDITS" || error.message.includes("INSUFFICIENT_CREDITS")) {
-                toast.error("Insufficient Credits", {
-                    description: "You need 20 credits to publish.",
+                toast.error("Insufficient Credits");
+                setError({
+                    message: "Insufficient Credits",
+                    description: "You need 20 credits to publish your project. Please purchase more to continue.",
                     action: {
                         label: "Buy Credits",
                         onClick: () => router.push("/pricing"),

@@ -462,6 +462,14 @@ export async function makeRevision(projectId: string, message: string) {
     - Make sure it's a complete, standalone HTML document with Tailwind CSS
     - Return the HTML Code Only, nothing else
 
+        
+HARD RULES (STRICT)
+- Output ONLY raw HTML
+- NO explanations, comments, markdown, or code fences
+- NO analysis or reasoning text
+- NO placeholders like “TODO” or “add later”
+- The result must be ready to deploy    
+
     Apply the requested changes while maintaining the Tailwind CSS styling approach
                 `
             },

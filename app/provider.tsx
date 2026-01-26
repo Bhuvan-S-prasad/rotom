@@ -1,11 +1,14 @@
 "use client"
 
 import { AuthUIProvider } from "@daveyplate/better-auth-ui"
+import { Toaster } from "sonner"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { ReactNode } from "react"
 
 import { authClient } from "@/lib/auth/auth-client"
+import { GlobalErrorProvider } from "@/lib/context/global-error-context"
+import { ErrorDisplay } from "@/components/ErrorDisplay"
 
 export function Providers({ children }: { children: ReactNode }) {
     const router = useRouter()
@@ -21,7 +24,11 @@ export function Providers({ children }: { children: ReactNode }) {
             }}
             Link={Link}
         >
-            {children}
+            <GlobalErrorProvider>
+                {children}
+                <ErrorDisplay />
+            </GlobalErrorProvider>
+            <Toaster richColors position="top-center" />
         </AuthUIProvider>
     )
 }
