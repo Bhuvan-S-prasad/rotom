@@ -69,7 +69,6 @@ export default function Home() {
       }
 
       setLoading(false)
-      console.log("done")
       route.push(`/projects/${data.projectId}`)
 
     }

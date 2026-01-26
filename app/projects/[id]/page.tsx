@@ -63,7 +63,6 @@ function Page() {
                 return
             }
             const data = await response.json()
-            console.log(data)
             setProject(data)
             setIsGenerating(data.current_code ? false : true)
 

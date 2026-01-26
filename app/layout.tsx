@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ColorBends from "@/components/ui/ColorBends";
+
 import { NavbarWrapper } from "@/components/NavbarWrapper";
 import FooterWrapper from "@/components/FooterWrapper";
 import { Providers } from "./provider";

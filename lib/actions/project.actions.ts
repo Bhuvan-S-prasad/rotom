@@ -11,7 +11,6 @@ export async function createUserProject(
     const session = await auth.api.getSession({
         headers: await headers()
     });
-    console.log("[Project DEBUG] Session retrieved")
 
     if (!session?.user) throw new Error("UNAUTHORIZED");
 
@@ -60,7 +59,6 @@ export async function createUserProject(
         }
     })
 
-    console.log("[Project DEBUG] Project creation complete: ", project.id);
     return { projectId: project.id };
 }
 
@@ -77,7 +75,6 @@ export async function enhanceProjectPrompt(projectId: string) {
 
     if (!project) throw new Error("PROJECT_NOT_FOUND");
 
-    console.log("[Project DEBUG] Starting Prompt Enhancement...")
     const promptEnhancer = await openai.chat.completions.create({
         model: 'mistralai/devstral-2512:free',
         messages: [
@@ -131,9 +128,6 @@ export async function generateProjectWebsite(projectId: string, enhancedPrompt: 
     })
 
     // Generate website code
-
-    console.log("[Project DEBUG] Enhanced Prompt: ", enhancedPrompt);
-    console.log("[Project DEBUG] Starting Code Generation (this may take a while)...");
 
     const codeGenerationResponse = await openai.chat.completions.create({
         model: 'mistralai/devstral-2512:free',
@@ -207,7 +201,6 @@ HARD RULES (STRICT)
     })
 
     const code = codeGenerationResponse.choices[0].message.content || '';
-    console.log("[Project DEBUG] Code Generated. Length: ", code.length);
 
     //create version for the project
 
@@ -238,7 +231,6 @@ HARD RULES (STRICT)
             current_version_index: version.id
         }
     })
-    console.log("[Project DEBUG] Project creation complete: ", projectId);
     return { projectId: projectId };
 }
 
