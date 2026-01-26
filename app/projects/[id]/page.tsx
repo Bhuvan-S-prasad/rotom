@@ -26,6 +26,7 @@ function Page() {
 
     const [isPublishing, setIsPublishing] = useState(false)
     const previewRef = useRef<ProjectPreviewRef>(null)
+    const generationStarted = useRef(false)
 
     const handlePublish = async () => {
         if (!project) return
@@ -55,7 +56,7 @@ function Page() {
 
     const fetchProject = async () => {
         try {
-            const response = await fetch(`/api/project/${projectId.id}`)
+            const response = await fetch(`/api/project/${projectId.id}`, { cache: 'no-store' })
             if (!response.ok) {
                 console.error("Failed to fetch project")
                 toast.error("Failed to fetch project details")
@@ -67,7 +68,8 @@ function Page() {
             setIsGenerating(data.current_code ? false : true)
 
             // If new project (no code), start generation flow
-            if (!data.current_code && data.initial_prompt) {
+            if (!data.current_code && data.initial_prompt && !generationStarted.current) {
+                generationStarted.current = true
                 handleNewProjectGeneration(data)
             }
         } catch (error) {
@@ -159,7 +161,7 @@ function Page() {
                 <div className="flex items-center gap-4 sm:min-w-96 text-nowrap">
                     <div className="p-2 bg-gray-100 rounded-lg">
                         <Image
-                            src="/favicon.png"
+                            src="/logo-rotom.png"
                             width={24}
                             height={24}
                             alt="Project Icon"

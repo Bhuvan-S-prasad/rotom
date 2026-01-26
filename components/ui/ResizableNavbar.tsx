@@ -241,7 +241,7 @@ export const NavbarLogo = () => {
             className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-white"
         >
             <Image
-                src="/favicon.png"
+                src="/logo-rotom.png"
                 alt="Logo"
                 width={32}
                 height={32}

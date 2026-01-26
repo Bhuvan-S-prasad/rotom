@@ -8,6 +8,8 @@ import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import LoaderComp from "@/components/LoaderComp";
 import { getUserCredits } from "@/lib/actions/user.actions";
+import Features from "@/components/Features";
+import HowItWorks from "@/components/HowItWorks";
 
 export default function Home() {
 
@@ -89,7 +91,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center bg-gray-50/30 overflow-x-hidden selection:bg-blue-100 selection:text-blue-900">
       <Toaster />
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-5xl px-4 py-20">
@@ -116,10 +118,10 @@ export default function Home() {
 
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-zinc-900 max-w-4xl text-pretty relative z-10">
-            Build software <span className="bg-linear-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent bg-size-[200%_auto] animate-shimmer">at the speed of thought.</span>
+            Design beautiful prototypes <span className="bg-linear-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent bg-size-[200%_auto] animate-shimmer">at the speed of thought.</span>
           </h1>
           <p className="text-zinc-500 font-medium text-lg md:text-xl mt-6 max-w-xl text-pretty relative z-10">
-            Rotom is the AI-powered builder that turns your ideas into production-ready code instantly.
+            Rotom is the AI-powered mockup generator that turns your ideas into production-ready frontend code instantly.
           </p>
         </div>
 
@@ -168,6 +170,10 @@ export default function Home() {
         </div>
 
       </div>
+
+      <Features />
+      <HowItWorks />
+
     </div>
   );
 }

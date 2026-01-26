@@ -10,6 +10,11 @@ function Page() {
                 <p className="text-center uppercase font-bold text-purple-600">PRICING</p>
                 <h3 className="text-3xl font-semibold text-center mx-auto mt-2">Pay as you go</h3>
 
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 max-w-2xl mx-auto mt-8 flex items-center gap-3 text-amber-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-alert-triangle shrink-0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                    <p className="text-sm font-medium">Payment gateway is currently under development. Purchasing credits is temporarily disabled.</p>
+                </div>
+
                 <div className="flex flex-wrap items-center justify-center gap-6 mt-16 w-full">
                     {pricingData.map((plan) => (
                         <div
@@ -89,12 +94,13 @@ function Page() {
                             </div>
 
                             <button
-                                className={`transition w-full py-3 rounded-lg font-medium mt-8 ${plan.mostPopular
+                                disabled
+                                className={`transition w-full py-3 rounded-lg font-medium mt-8 cursor-not-allowed opacity-70 ${plan.mostPopular
                                     ? 'bg-white hover:bg-slate-100 text-slate-800'
                                     : 'bg-blue-600 hover:bg-blue-700 text-white'
                                     }`}
                             >
-                                {plan.buttonText}
+                                Coming Soon
                             </button>
                         </div>
                     ))}
