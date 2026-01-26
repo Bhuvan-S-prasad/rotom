@@ -1,13 +1,17 @@
 # Rotom
 
-**Rotom** is an AI-powered web builder agent that allows users to generate, edit, and publish web projects using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the web development process.
+<p align="center">
+  <img src="https://ik.imagekit.io/wq68aygdr/gpt-image-1.5-high-fidelity_b_generate_a_simple_an.png" alt="Rotom" width="128" height="128" style="border-radius: 50%" />
+</p>
+
+**Rotom** is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the design prototyping process.
 
 ## 🚀 Features
 
--   **AI-Powered Project Generation**: Create full web projects from a simple text prompt.
+-   **AI-Powered Mockup Generation**: Create full web prototypes from a simple text prompt.
 -   **Interactive Editor**: Real-time code editing with a live preview.
 -   **Version Control**: Automatically saves versions of your project, allowing you to rollback or fork.
--   **Community Hub**: Publish your projects to the community and explore what others have built.
+-   **Community Hub**: Publish your designs to the community and explore what others have built.
 -   **Credit System**: Integrated credit system for AI usage.
 -   **Authentication**: Secure user authentication and account management.
 
@@ -100,6 +104,7 @@ This project wouldn't be possible without these amazing open-source libraries an
 -   **[Prisma](https://www.prisma.io/)** - Next-generation Node.js and TypeScript ORM
 -   **[Better Auth](https://better-auth.com/)** - The most comprehensive authentication library for TypeScript
 -   **[Motion](https://motion.dev/)** - A production-ready motion library for React
+-   **[OpenRouter](https://openrouter.ai/)** - Unified interface for LLMs
 -   **[Lucide](https://lucide.dev/)** - Beautiful & consistent icons
 -   **[Sonner](https://sonner.emilkowal.ski/)** - An opinionated toast component for React
 
