@@ -7,6 +7,7 @@ import { toast, Toaster } from "sonner";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import LoaderComp from "@/components/LoaderComp";
+import { getUserCredits } from "@/lib/actions/user.actions";
 
 export default function Home() {
 
@@ -23,7 +24,20 @@ export default function Home() {
       if (!session?.user) {
         return toast.error('please sign in to create a project')
       }
-      else if (!input.trim()) {
+
+      const credits = await getUserCredits();
+      if (credits < 20) {
+        toast.error("Insufficient Credits", {
+          description: "You need 20 credits to create a project.",
+          action: {
+            label: "Buy Credits",
+            onClick: () => route.push("/pricing"),
+          },
+        });
+        return;
+      }
+
+      if (!input.trim()) {
         return toast.error('Please enter a message')
       }
       setLoading(true)

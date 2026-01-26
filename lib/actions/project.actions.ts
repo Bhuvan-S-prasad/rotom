@@ -52,6 +52,31 @@ export async function createUserProject(
         data: { credits: { decrement: 20 } }
     })
 
+    await prisma.conversation.create({
+        data: {
+            role: 'assistant',
+            content: 'Project created. Initializing...',
+            projectId: project.id
+        }
+    })
+
+    console.log("[Project DEBUG] Project creation complete: ", project.id);
+    return { projectId: project.id };
+}
+
+export async function enhanceProjectPrompt(projectId: string) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session?.user) throw new Error("UNAUTHORIZED");
+
+    const project = await prisma.websiteProject.findUnique({
+        where: { id: projectId },
+    });
+
+    if (!project) throw new Error("PROJECT_NOT_FOUND");
+
     console.log("[Project DEBUG] Starting Prompt Enhancement...")
     const promptEnhancer = await openai.chat.completions.create({
         model: 'mistralai/devstral-2512:free',
@@ -73,11 +98,11 @@ export async function createUserProject(
                     return ONLY enhanced prompt, nothing else. make it detailed but concise around 2 to 3 paragraphs max
                     `
             },
-            { role: "user", content: initialPrompt },
+            { role: "user", content: project.initial_prompt },
         ],
     })
 
-    const enhancedPrompt = promptEnhancer.choices[0].message.content
+    const enhancedPrompt = promptEnhancer.choices[0].message.content || "";
 
     await prisma.conversation.create({
         data: {
@@ -87,11 +112,21 @@ export async function createUserProject(
         }
     })
 
+    return enhancedPrompt;
+}
+
+export async function generateProjectWebsite(projectId: string, enhancedPrompt: string) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session?.user) throw new Error("UNAUTHORIZED");
+
     await prisma.conversation.create({
         data: {
             role: 'assistant',
             content: 'generating your website...',
-            projectId: project.id
+            projectId: projectId
         }
     })
 
@@ -182,7 +217,7 @@ HARD RULES (STRICT)
                 .replace(/```$/g, '')
                 .trim(),
             description: 'Initial version',
-            projectId: project.id
+            projectId: projectId
         }
     })
 
@@ -190,12 +225,12 @@ HARD RULES (STRICT)
         data: {
             role: 'assistant',
             content: 'Website generated successfully',
-            projectId: project.id
+            projectId: projectId
         }
     })
 
     await prisma.websiteProject.update({
-        where: { id: project.id },
+        where: { id: projectId },
         data: {
             current_code: code.replace(/```[a-z]*\n?/gi, '')
                 .replace(/```$/g, '')
@@ -203,8 +238,8 @@ HARD RULES (STRICT)
             current_version_index: version.id
         }
     })
-    console.log("[Project DEBUG] Project creation complete: ", project.id);
-    return { projectId: project.id };
+    console.log("[Project DEBUG] Project creation complete: ", projectId);
+    return { projectId: projectId };
 }
 
 

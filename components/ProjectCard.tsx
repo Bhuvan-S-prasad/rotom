@@ -4,6 +4,7 @@ import { Trash2Icon, EyeIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface Project {
     id: string;
@@ -41,11 +42,11 @@ export default function ProjectCard({ project, isPublic = false }: ProjectCardPr
                 router.refresh();
             } else {
                 console.error("Failed to delete project");
-                alert("Failed to delete project");
+                toast.error("Failed to delete project");
             }
         } catch (error) {
             console.error("Error deleting project:", error);
-            alert("Error deleting project");
+            toast.error("Error deleting project");
         } finally {
             setIsDeleting(false);
         }

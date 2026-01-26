@@ -31,6 +31,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
 
             if (!response.ok) {
                 console.error("Failed to rollback");
+                toast.error("Failed to rollback to previous version");
                 return;
             }
 
@@ -38,6 +39,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
             setProject(updatedProject);
         } catch (error) {
             console.error("Error rolling back:", error);
+            toast.error("Failed to rollback to previous version");
         } finally {
             setIsGenerating(false);
         }
@@ -86,7 +88,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
                     return;
                 }
                 console.error("Failed to send message");
-                // Ideally handle error state here (e.g. toast notification)
+                toast.error("Failed to send message");
                 return;
             }
 
@@ -94,6 +96,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
             setProject(updatedProject);
         } catch (error) {
             console.error("Error sending message:", error);
+            toast.error("Failed to send message");
         } finally {
             setIsGenerating(false);
         }
@@ -181,7 +184,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
 
                                             <Link
                                                 target="_blank"
-                                                href={`/preview/${project.id}/${ver.id}`}
+                                                href={`/preview/${project.id}`}
                                                 className="flex items-center gap-1.5 text-xs py-1.5 px-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors shadow-sm"
                                             >
                                                 <EyeIcon size={12} /> View

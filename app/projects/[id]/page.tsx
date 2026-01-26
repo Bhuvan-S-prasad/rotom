@@ -2,8 +2,8 @@
 
 import ProjectPreview, { ProjectPreviewRef } from "@/components/ProjectPreview"
 import Sidebar from "@/components/Sidebar"
-import { togglePublish } from "@/lib/actions/project.actions"
-import { Project } from "@/lib/constants"
+import { enhanceProjectPrompt, generateProjectWebsite, togglePublish } from "@/lib/actions/project.actions"
+import { Message, Project } from "@/lib/constants"
 import { router } from "better-auth/api"
 import { CpuIcon, Download, EyeIcon, EyeOffIcon, LaptopIcon, MessageSquareIcon, SaveIcon, SmartphoneIcon, TabletIcon, ViewIcon, XIcon } from "lucide-react"
 import Image from "next/image"
@@ -11,6 +11,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
+
 
 function Page() {
 
@@ -57,14 +58,70 @@ function Page() {
             const response = await fetch(`/api/project/${projectId.id}`)
             if (!response.ok) {
                 console.error("Failed to fetch project")
+                toast.error("Failed to fetch project details")
                 return
             }
             const data = await response.json()
             console.log(data)
             setProject(data)
             setIsGenerating(data.current_code ? false : true)
+
+            // If new project (no code), start generation flow
+            if (!data.current_code && data.initial_prompt) {
+                handleNewProjectGeneration(data)
+            }
         } catch (error) {
             console.error("Error fetching project:", error)
+        }
+    }
+
+    const handleNewProjectGeneration = async (projectData: Project) => {
+        try {
+
+            // 1. Enhance Prompt
+            const enhancedPrompt = await enhanceProjectPrompt(projectData.id)
+
+            // Update local state with enhancement message
+            const enhancementMsg: Message = {
+                id: "enhancement-" + Date.now(),
+                role: "assistant",
+                content: `I have enhanced your prompt to: "${enhancedPrompt}"`,
+                timestamp: new Date().toISOString()
+            }
+
+            setProject(prev => prev ? {
+                ...prev,
+                conversation: [...prev.conversation, enhancementMsg]
+            } : null)
+
+            // 2. Generate Website
+            // Update local state with "generating" message
+            const generatingMsg: Message = {
+                id: "generating-" + Date.now(),
+                role: "assistant",
+                content: 'generating your website...',
+                timestamp: new Date().toISOString()
+            }
+
+            setProject(prev => prev ? {
+                ...prev,
+                conversation: [...prev.conversation, generatingMsg]
+            } : null)
+
+            const result = await generateProjectWebsite(projectData.id, enhancedPrompt)
+
+            // Re-fetch final state
+            const response = await fetch(`/api/project/${projectId.id}`)
+            if (response.ok) {
+                const finalData = await response.json()
+                setProject(finalData)
+            }
+
+        } catch (error) {
+            console.error("Error generating project:", error)
+            toast.error("Failed to generate project")
+        } finally {
+            setIsGenerating(false)
         }
     }
 
