@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast, Toaster } from "sonner";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
+import LoaderComp from "@/components/LoaderComp";
 
 export default function Home() {
 
@@ -37,6 +38,17 @@ export default function Home() {
       const data = await res.json();
 
       if (!res.ok) {
+        if (res.status === 403) {
+          toast.error("Insufficient Credits", {
+            description: "You need 20 credits to create a project.",
+            action: {
+              label: "Buy Credits",
+              onClick: () => route.push("/pricing"),
+            },
+          });
+          setLoading(false);
+          return;
+        }
         throw new Error(data.error || 'Failed to create project');
       }
 
@@ -52,6 +64,14 @@ export default function Home() {
 
 
 
+  }
+
+  if (loading) {
+    return (
+      <div className="h-screen max-w-screen flex items-center justify-center">
+        <LoaderComp />
+      </div>
+    )
   }
 
   return (

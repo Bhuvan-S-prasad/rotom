@@ -1,7 +1,7 @@
 export const pricing = [
     {
         title: 'Starter Credits',
-        price: 19,
+        price: 5,
         features: [
             '500 AI Credits',
             'Generate up to 5 sites',
@@ -12,8 +12,8 @@ export const pricing = [
         buttonText: 'Buy Credits',
     },
     {
-        title: 'Pro Bundle',
-        price: 49,
+        title: 'Pro credits',
+        price: 10,
         mostPopular: true,
         features: [
             '1,500 AI Credits',
@@ -26,8 +26,8 @@ export const pricing = [
         buttonText: 'Buy Bundle',
     },
     {
-        title: 'Agency Power',
-        price: 99,
+        title: 'pro plus credits',
+        price: 15,
         features: [
             '5,000 AI Credits',
             'Unlimited site generation',

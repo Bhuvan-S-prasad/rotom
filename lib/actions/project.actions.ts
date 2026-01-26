@@ -20,7 +20,7 @@ export async function createUserProject(
 
 
     if (!user) throw new Error("USER_NOT_FOUND");
-    if (user.credits < 5) throw new Error("INSUFFICIENT_CREDITS");
+    if (user.credits < 20) throw new Error("INSUFFICIENT_CREDITS");
 
     const project = await prisma.websiteProject.create({
         data: {
@@ -49,12 +49,12 @@ export async function createUserProject(
 
     await prisma.user.update({
         where: { id: userId },
-        data: { credits: { decrement: 5 } }
+        data: { credits: { decrement: 20 } }
     })
 
     console.log("[Project DEBUG] Starting Prompt Enhancement...")
     const promptEnhancer = await openai.chat.completions.create({
-        model: 'z-ai/glm-4.5-air:free',
+        model: 'mistralai/devstral-2512:free',
         messages: [
             {
                 role: "system",
@@ -101,7 +101,7 @@ export async function createUserProject(
     console.log("[Project DEBUG] Starting Code Generation (this may take a while)...");
 
     const codeGenerationResponse = await openai.chat.completions.create({
-        model: 'z-ai/glm-4.5-air:free',
+        model: 'mistralai/devstral-2512:free',
         messages: [
             {
                 role: "system",
@@ -284,6 +284,17 @@ export async function togglePublish(projectId: string) {
 
     if (!project) throw new Error("PROJECT_NOT_FOUND");
 
+    if (!project.isPublished) {
+        if (user.credits < 20) throw new Error("INSUFFICIENT_CREDITS");
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                credits: { decrement: 20 }
+            }
+        });
+    }
+
     const updatedProject = await prisma.websiteProject.update({
         where: { id: project.id },
         data: {
@@ -335,7 +346,7 @@ export async function makeRevision(projectId: string, message: string) {
 
     if (!user) throw new Error("USER_NOT_FOUND");
 
-    if (user.credits < 5) throw new Error("INSUFFICIENT_CREDITS");
+    if (user.credits < 10) throw new Error("INSUFFICIENT_CREDITS");
 
     if (!message || message.trim() === "") throw new Error("MESSAGE_REQUIRED");
 
@@ -359,12 +370,12 @@ export async function makeRevision(projectId: string, message: string) {
     await prisma.user.update({
         where: { id: userId },
         data: {
-            credits: { decrement: 5 }
+            credits: { decrement: 10 }
         }
     })
 
     const promptEnhanceResponse = await openai.chat.completions.create({
-        model: 'z-ai/glm-4.5-air:free',
+        model: 'mistralai/devstral-2512:free',
         messages: [
             {
                 role: 'system',
@@ -409,7 +420,7 @@ export async function makeRevision(projectId: string, message: string) {
     // generate website code
 
     const codeGenerationResponse = await openai.chat.completions.create({
-        model: 'z-ai/glm-4.5-air:free',
+        model: 'mistralai/devstral-2512:free',
         messages: [
             {
                 role: 'system',

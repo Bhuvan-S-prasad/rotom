@@ -16,6 +16,9 @@ export async function POST(
         if (error.message === "PROJECT_NOT_FOUND") {
             return NextResponse.json({ error: "Project not found" }, { status: 404 });
         }
+        if (error.message === "INSUFFICIENT_CREDITS") {
+            return NextResponse.json({ error: "Not enough credits" }, { status: 403 });
+        }
         return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
     }
 }

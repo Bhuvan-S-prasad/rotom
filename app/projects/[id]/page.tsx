@@ -34,8 +34,18 @@ function Page() {
             setProject(prev => prev ? { ...prev, isPublished: !prev.isPublished } : null)
             toast.success(project.isPublished ? "Project unpublished" : "Project published successfully")
             router.refresh()
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error publishing project:", error)
+            if (error.message === "INSUFFICIENT_CREDITS" || error.message.includes("INSUFFICIENT_CREDITS")) {
+                toast.error("Insufficient Credits", {
+                    description: "You need 20 credits to publish.",
+                    action: {
+                        label: "Buy Credits",
+                        onClick: () => router.push("/pricing"),
+                    },
+                });
+                return;
+            }
             toast.error("Failed to update publish status")
         } finally {
             setIsPublishing(false)

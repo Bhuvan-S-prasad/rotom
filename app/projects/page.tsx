@@ -9,6 +9,7 @@ async function Page() {
     const projects = await getUserProjects();
 
     return (
+
         <div className="mt-20 min-h-screen">
             <div className="container mb-20 mx-auto px-4 md:px-8 py-12 max-w-7xl">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-12">

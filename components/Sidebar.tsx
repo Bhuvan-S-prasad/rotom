@@ -1,7 +1,9 @@
 import { Message, Project, Version } from "@/lib/constants";
 import { BotIcon, ChevronLeft, ChevronRight, Clock, CodeIcon, EyeIcon, MessageSquare, RefreshCcw, SendIcon, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 interface Props {
     isMenuOpen: boolean;
@@ -14,6 +16,7 @@ interface Props {
 function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGenerating }: Props) {
     const messageRef = useRef<HTMLDivElement>(null);
     const [input, setInput] = useState("");
+    const router = useRouter();
 
     const handleRollBack = async (versionId: string) => {
         try {
@@ -72,6 +75,16 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
             });
 
             if (!response.ok) {
+                if (response.status === 403) {
+                    toast.error("Insufficient Credits", {
+                        description: "You need 10 credits to make a revision.",
+                        action: {
+                            label: "Buy Credits",
+                            onClick: () => router.push("/pricing"),
+                        },
+                    });
+                    return;
+                }
                 console.error("Failed to send message");
                 // Ideally handle error state here (e.g. toast notification)
                 return;
