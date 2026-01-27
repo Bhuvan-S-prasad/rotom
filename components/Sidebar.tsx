@@ -79,7 +79,7 @@ function Sidebar({ isMenuOpen, project, setProject, isGenerating, setIsGeneratin
             });
 
             if (!response.ok) {
-                if (response.status === 403) {
+                if (response.status === 403 || response.status === 402) {
                     toast.error("Insufficient Credits");
                     setError({
                         message: "Insufficient Credits",

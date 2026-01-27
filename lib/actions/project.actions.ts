@@ -312,7 +312,9 @@ export async function togglePublish(projectId: string) {
     if (!project) throw new Error("PROJECT_NOT_FOUND");
 
     if (!project.isPublished) {
-        if (user.credits < 20) throw new Error("INSUFFICIENT_CREDITS");
+        if (user.credits < 20) {
+            throw new Error("INSUFFICIENT_CREDITS");
+        }
 
         await prisma.user.update({
             where: { id: userId },
