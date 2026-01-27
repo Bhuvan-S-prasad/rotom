@@ -4,7 +4,7 @@
   <img src="https://ik.imagekit.io/wq68aygdr/gpt-image-1.5-high-fidelity_b_generate_a_simple_an.png" alt="Rotom" width="128" height="128" style="border-radius: 50%" />
 </p>
 
-**Rotom** is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the design prototyping process.
+**Rotom** is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 16, it leverages advanced AI to streamline the design prototyping process.
 
 ## 🚀 Features
 
@@ -17,7 +17,7 @@
 
 ## 🛠️ Tech Stack
 
--   **Framework**: ![Next.js](https://img.shields.io/badge/Next.js_15-black?style=for-the-badge&logo=next.js&logoColor=white)
+-   **Framework**: ![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white)
 -   **Language**: ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 -   **Styling**: ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 -   **Database**: ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
