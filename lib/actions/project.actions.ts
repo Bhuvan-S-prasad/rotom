@@ -76,7 +76,7 @@ export async function enhanceProjectPrompt(projectId: string) {
     if (!project) throw new Error("PROJECT_NOT_FOUND");
 
     const promptEnhancer = await openai.chat.completions.create({
-        model: 'mistralai/devstral-2512:free',
+        model: 'moonshotai/kimi-k2:free',
         messages: [
             {
                 role: "system",
@@ -130,7 +130,7 @@ export async function generateProjectWebsite(projectId: string, enhancedPrompt: 
     // Generate website code
 
     const codeGenerationResponse = await openai.chat.completions.create({
-        model: 'mistralai/devstral-2512:free',
+        model: 'moonshotai/kimi-k2:free',
         messages: [
             {
                 role: "system",
@@ -404,7 +404,7 @@ export async function makeRevision(projectId: string, message: string) {
     })
 
     const promptEnhanceResponse = await openai.chat.completions.create({
-        model: 'mistralai/devstral-2512:free',
+        model: 'moonshotai/kimi-k2:free',
         messages: [
             {
                 role: 'system',
@@ -449,7 +449,7 @@ export async function makeRevision(projectId: string, message: string) {
     // generate website code
 
     const codeGenerationResponse = await openai.chat.completions.create({
-        model: 'mistralai/devstral-2512:free',
+        model: 'moonshotai/kimi-k2:free',
         messages: [
             {
                 role: 'system',
@@ -650,5 +650,40 @@ export async function getPublishedProjects(page: number = 1, limit: number = 6) 
         projects,
         totalPages: Math.ceil(total / limit),
         currentPage: page
+    };
+}
+
+// Get project for preview with ownership check
+export async function getProjectForPreview(projectId: string) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    const currentUserId = session?.user?.id || null;
+
+    // First try to find the project (either published or owned by current user)
+    const project = await prisma.websiteProject.findUnique({
+        where: { id: projectId },
+        include: {
+            conversation: {
+                orderBy: { timestamp: 'asc' }
+            },
+            versions: { orderBy: { timestamp: 'asc' } }
+        }
+    });
+
+    if (!project) return null;
+
+    // Check if user is the owner
+    const isOwner = currentUserId === project.userId;
+
+    // If not owner and not published, deny access
+    if (!isOwner && !project.isPublished) {
+        return null;
+    }
+
+    return {
+        ...project,
+        isOwner
     };
 }

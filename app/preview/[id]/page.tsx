@@ -5,15 +5,21 @@ import { Project } from "@/lib/constants"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
+interface PreviewProject extends Project {
+    isOwner: boolean;
+}
+
 function Page() {
 
     const projectId = useParams()
-    const [project, setProject] = useState<Project | null>(null)
+
+    const [project, setProject] = useState<PreviewProject | null>(null)
     const [isGenerating, setIsGenerating] = useState(true)
 
     const fetchProject = async () => {
         try {
-            const response = await fetch(`/api/project/${projectId.id}`)
+            // Use the preview API endpoint that includes ownership check
+            const response = await fetch(`/api/project/${projectId.id}/preview`)
             if (!response.ok) {
                 console.error("Failed to fetch project")
                 return
@@ -43,7 +49,7 @@ function Page() {
                 project={project}
                 isGenerating={isGenerating}
                 device="desktop"
-                showEditorPanel={true}
+                showEditorPanel={project.isOwner}
             />
         </div>
     )
