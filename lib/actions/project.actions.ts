@@ -76,11 +76,11 @@ export async function enhanceProjectPrompt(projectId: string) {
     if (!project) throw new Error("PROJECT_NOT_FOUND");
 
     const promptEnhancer = await openai.chat.completions.create({
-        model: 'moonshotai/kimi-k2:free',
-        messages: [
-            {
-                role: "system",
-                content: `
+      model: "inclusionai/ring-2.6-1t:free",
+      messages: [
+        {
+          role: "system",
+          content: `
                     you are an expert prompt engineer who specialises in prompt enhancement and optimization to get full work from the LLM through prompts.
                     take the user's website request and expand it into a detailed, comprehensive prompt that will help create the best possible website.
 
@@ -93,11 +93,11 @@ export async function enhanceProjectPrompt(projectId: string) {
                     6. adding any missing but important elements
 
                     return ONLY enhanced prompt, nothing else. make it detailed but concise around 2 to 3 paragraphs max
-                    `
-            },
-            { role: "user", content: project.initial_prompt },
-        ],
-    })
+                    `,
+        },
+        { role: "user", content: project.initial_prompt },
+      ],
+    });
 
     const enhancedPrompt = promptEnhancer.choices[0].message.content || "";
 
@@ -130,11 +130,11 @@ export async function generateProjectWebsite(projectId: string, enhancedPrompt: 
     // Generate website code
 
     const codeGenerationResponse = await openai.chat.completions.create({
-        model: 'moonshotai/kimi-k2:free',
-        messages: [
-            {
-                role: "system",
-                content: `
+      model: "inclusionai/ring-2.6-1t:free",
+      messages: [
+        {
+          role: "system",
+          content: `
                 You are an expert senior frontend engineer and UI designer.
                 Create a complete, production-ready, single-page website based on the following request:
                 "${enhancedPrompt}"
@@ -194,11 +194,11 @@ HARD RULES (STRICT)
 - NO analysis or reasoning text
 - NO placeholders like “TODO” or “add later”
 - The result must be ready to deploy    
-                `
-            },
-            { role: "user", content: enhancedPrompt || `` },
-        ],
-    })
+                `,
+        },
+        { role: "user", content: enhancedPrompt || `` },
+      ],
+    });
 
     const code = codeGenerationResponse.choices[0].message.content || '';
 
@@ -404,11 +404,11 @@ export async function makeRevision(projectId: string, message: string) {
     })
 
     const promptEnhanceResponse = await openai.chat.completions.create({
-        model: 'moonshotai/kimi-k2:free',
-        messages: [
-            {
-                role: 'system',
-                content: `
+      model: "inclusionai/ring-2.6-1t:free",
+      messages: [
+        {
+          role: "system",
+          content: `
                 You are a prompt enhancement specialist. The user wants to make changes to their website. Enhance their request to be more specific and actionable for a web developer.
 
     Enhance this by:
@@ -418,14 +418,14 @@ export async function makeRevision(projectId: string, message: string) {
     4. Using clear technical terms
 
     Return ONLY the enhanced request, nothing else. Keep it concise (1-2 sentences).
-                `
-            },
-            {
-                role: 'user',
-                content: `user request: "${message}"`
-            }
-        ]
-    })
+                `,
+        },
+        {
+          role: "user",
+          content: `user request: "${message}"`,
+        },
+      ],
+    });
 
     const enhancedPrompt = promptEnhanceResponse.choices[0].message.content || '';
 
@@ -449,11 +449,11 @@ export async function makeRevision(projectId: string, message: string) {
     // generate website code
 
     const codeGenerationResponse = await openai.chat.completions.create({
-        model: 'moonshotai/kimi-k2:free',
-        messages: [
-            {
-                role: 'system',
-                content: `
+      model: "inclusionai/ring-2.6-1t:free",
+      messages: [
+        {
+          role: "system",
+          content: `
                 You are an expert web developer. 
 
     CRITICAL REQUIREMENTS:
@@ -473,14 +473,14 @@ HARD RULES (STRICT)
 - The result must be ready to deploy    
 
     Apply the requested changes while maintaining the Tailwind CSS styling approach
-                `
-            },
-            {
-                role: 'user',
-                content: `Here is the current website code: ${currentProject.current_code} the user wants the chanee: "${enhancedPrompt}"`
-            }
-        ]
-    })
+                `,
+        },
+        {
+          role: "user",
+          content: `Here is the current website code: ${currentProject.current_code} the user wants the chanee: "${enhancedPrompt}"`,
+        },
+      ],
+    });
 
     const code = codeGenerationResponse.choices[0].message.content || '';
 
